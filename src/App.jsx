@@ -1,18 +1,21 @@
-import { useEffect, useState, startTransition } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import {MapContainer, TileLayer, Marker, Popup} from "react-leaflet"
 import DataCard from './components/DataCard.jsx'
-import './App.css'
+import {Map} from './components/Map'
 import 'leaflet/dist/leaflet.css'
+import {isIPOrDomain} from './utils'
+import {fakeData} from './data'
+import {initialSate} from './data'
 
 function App() {
 
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(initialSate)
   const [isLoading, setIsLoading] = useState(true)
   const [inputToSearch, setInputToSearch] = useState('')
 
   const getIpByLocation = async ()=>{
 
-    const response = await fetch("https://geo.ipify.org/api/v2/country,city,vpn?apiKey=at_DKICzQIg2c9XHjYagTuFySDDzA3u8&ipAddress=")
+    const response = await fetch("https://geo.ipify.org/api/v2/country,city,vpn?apiKey=at_3VBBNCG6UauEtXDm7xvFw0sQhMmaC&ipAddress=")
     const data = await response.json()
     console.log(data)
     if(response.ok){
@@ -20,54 +23,56 @@ function App() {
       setIsLoading(false)
     }
   }
-  useEffect(()=>{
-        getIpByLocation()
-    }, [])
-
-  const isIPOrDomain = (input) => {
-    return input.match(/(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}/) ? true : false
-  }
 
   const getLocationByIpOrDomain = async (input) => {
     
-    const response = await fetch(`https://geo.ipify.org/api/v2/country,city,vpn?apiKey=at_DKICzQIg2c9XHjYagTuFySDDzA3u8&${isIPOrDomain(input) ? 'ipAddress='+input : 'domain='+input}`)
+    const response = await fetch(`https://geo.ipify.org/api/v2/country,city,vpn?apiKey=at_3VBBNCG6UauEtXDm7xvFw0sQhMmaC&${isIPOrDomain(input) ? 'ipAddress='+input : 'domain='+input}`)
     const data = await response.json()
     setData(data)
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log("I've been dispatched")
-    getLocationByIpOrDomain(inputToSearch)
+    // getLocationByIpOrDomain(inputToSearch)
+    const output = getFakeData()
+    setData(output)
+
     setInputToSearch('')
   }
 
+  const getFakeData = () => {
+    return fakeData[Math.floor(Math.random() * fakeData.length)]
+  }
+
+  useEffect(()=>{
+      // getIpByLocation()
+      setIsLoading(false)
+    }, [])
+
   return (
-    <div className="bg-gray-200">
-      <h1>IP Address Tracker</h1>
-      <form onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          placeholder="Search for any IP address or domain" 
-          className='px-2 py-3 outiline-none'
-          onChange={(e)=> setInputToSearch(e.target.value)}
-          />
-        <input type="submit"  className="px-5 py-3 bg-black text-white" value=">" />
-      </form>
+    <div className="h-auto">
+      <section className="bg-[url('/images/pattern-bg.png')] bg-no-repeat h-56 border-1 flex flex-col justify-start items-center relative">
+        <h1 className='my-9 text-white text-2xl'>IP Address Tracker</h1>
+        <form onSubmit={handleSubmit} className="flex flex-row justify-center align-center min-w-[50%]">
+          <input
+            type="text" 
+            placeholder="Search for any IP address or domain" 
+            className='px-2 py-3 outiline-none w-2/6 h-auto rounded-tl-xl rounded-bl-xl'
+            onChange={(e)=> setInputToSearch(e.target.value)}
+            />
+          <button type="submit"  className=" bg-black text-white w-12 grid place-content-center font-bold rounded-tr-xl rounded-br-xl hover:cursor-pointer">&#62;</button>
+        </form>
+        <DataCard data={data}/>
+      </section>
       <div className="h-screen">
           {isLoading ? <p>Loading...</p> : 
           <>
-            <DataCard data={data}/>
-            <MapContainer scrollWheelZoom={false} zoom={13} center={[data.location.lat, data.location.lng]} className="h-1/2">
+            <MapContainer scrollWheelZoom={false} zoom={13} center={[data.location.lat, data.location.lng]} className="h-1/2 z-10 max-w-screen-xl">
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <Marker position={[data.location.lat, data.location.lng]}>
-                <Popup>
-                  Initial IP adress {[data.location.lat, data.location.lng]}
-                </Popup>
-              </Marker>
+              <Map position={[data.location.lat, data.location.lng]}/>
             </MapContainer>
           </>}
       </div>
