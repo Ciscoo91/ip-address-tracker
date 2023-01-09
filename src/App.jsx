@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react'
-import {MapContainer, TileLayer, Marker, Popup} from "react-leaflet"
+import { useEffect, useState } from 'react'
+import {MapContainer, TileLayer } from "react-leaflet"
 import DataCard from './components/DataCard.jsx'
 import {Map} from './components/Map'
 import 'leaflet/dist/leaflet.css'
@@ -50,7 +50,7 @@ function App() {
     }, [])
 
   return (
-    <div className="h-auto">
+    <div className="h-auto md:w-9/12 mt-4 m-auto drop-shadow-md">
       <section className="bg-[url('/images/pattern-bg.png')] bg-no-repeat h-56 border-1 flex flex-col justify-start items-center relative">
         <h1 className='my-9 text-white text-2xl'>IP Address Tracker</h1>
         <form onSubmit={handleSubmit} className="flex flex-row justify-center align-center min-w-[50%]">
