@@ -50,14 +50,14 @@ function App() {
     }, [])
 
   return (
-    <div className="h-auto md:w-9/12 mt-4 m-auto drop-shadow-md">
-      <section className="bg-[url('/images/pattern-bg.png')] bg-no-repeat h-56 border-1 flex flex-col justify-start items-center relative">
-        <h1 className='my-9 text-white text-2xl'>IP Address Tracker</h1>
-        <form onSubmit={handleSubmit} className="flex flex-row justify-center align-center min-w-[50%]">
+    <div className="h-full md:w-9/12 m-auto mb-0 drop-shadow-md">
+      <section className="bg-[url('/images/pattern-bg.png')] bg-no-repeat h-64 md:h-56 border-1 flex flex-col justify-start items-center relative">
+        <h1 className='my-3 md:my-9 text-white text-2xl'>IP Address Tracker</h1>
+        <form onSubmit={handleSubmit} className="flex flex-row justify-center align-center w-11/12 md:min-w-[50%]">
           <input
             type="text" 
             placeholder="Search for any IP address or domain" 
-            className='px-2 py-3 outiline-none w-2/6 h-auto rounded-tl-xl rounded-bl-xl'
+            className="px-2 py-3 outiline-none w-full md:w-2/6 h-auto rounded-tl-xl rounded-bl-xl outline-0"
             onChange={(e)=> setInputToSearch(e.target.value)}
             />
           <button type="submit"  className=" bg-black text-white w-12 grid place-content-center font-bold rounded-tr-xl rounded-br-xl hover:cursor-pointer">&#62;</button>
@@ -67,7 +67,7 @@ function App() {
       <div className="h-screen">
           {isLoading ? <p>Loading...</p> : 
           <>
-            <MapContainer scrollWheelZoom={false} zoom={13} center={[data.location.lat, data.location.lng]} className="h-1/2 z-10 max-w-screen-xl">
+            <MapContainer scrollWheelZoom={false} zoom={13} center={[data.location.lat, data.location.lng]} className="h-full md:h-1/2 z-10 max-w-screen-xl">
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -76,9 +76,9 @@ function App() {
             </MapContainer>
           </>}
       </div>
-      <div className="attribution">
+      <div className="attribution text-center">
         Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
-        Coded by <a href="#">Your Name Here</a>.
+        Coded by <a href="#">Francisco Mambo</a>.
       </div>
     </div>
   )
