@@ -51,9 +51,9 @@ function App() {
 
   return (
     <div className="h-full md:w-9/12 m-auto mb-0 drop-shadow-md">
-      <section className="bg-[url('/images/pattern-bg.png')] bg-no-repeat h-64 md:h-56 border-1 flex flex-col justify-start items-center relative">
+      <section className="bg-[url('/images/pattern-bg.png')] bg-no-repeat h-64 md:h-56 border-1 flex flex-col justify-start items-center relative font-body">
         <h1 className='my-3 md:my-9 text-white text-2xl'>IP Address Tracker</h1>
-        <form onSubmit={handleSubmit} className="flex flex-row justify-center align-center w-11/12 md:min-w-[50%]">
+        <form onSubmit={handleSubmit} className="flex flex-row justify-center align-center w-11/12 md:w-full">
           <input
             type="text" 
             placeholder="Search for any IP address or domain" 
