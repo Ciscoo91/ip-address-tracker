@@ -1,36 +1,23 @@
 import { useEffect, useState } from 'react'
 import {MapContainer, TileLayer } from "react-leaflet"
 import DataCard from './components/DataCard.jsx'
-import {Map} from './components/Map'
+import Map from './components/Map'
 import Modal from './components/Modal'
 import 'leaflet/dist/leaflet.css'
 import {isIPOrDomain} from './utils'
-import {fakeData} from './data'
 import {initialSate} from './data'
 
 function App() {
 
   const [data, setData] = useState(initialSate)
-  const [isLoading, setIsLoading] = useState(true)
+  // const [isLoading, setIsLoading] = useState(true)
   const [inputToSearch, setInputToSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
-
-  const getIpByLocation = async ()=>{
-
-    const response = await fetch("https://geo.ipify.org/api/v2/country,city,vpn?apiKey=at_3VBBNCG6UauEtXDm7xvFw0sQhMmaC&ipAddress=")
-    const data = await response.json()
-    console.log(data)
-    if(response.ok){
-      setData(data)
-      setIsLoading(false)
-    }
-  }
 
   const getLocationByIpOrDomain = async (input) => {
     
     const response = await fetch(`https://geo.ipify.org/api/v2/country,city,vpn?apiKey=at_3VBBNCG6UauEtXDm7xvFw0sQhMmaC&${isIPOrDomain(input) ? 'ipAddress='+input : 'domain='+input}`)
 
-    // console.log(response)
 
     if(response.ok){
       const data = await response.json()
@@ -44,20 +31,9 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault()
     getLocationByIpOrDomain(inputToSearch)
-    // const output = getFakeData()
-    // setData(output)
-
     setInputToSearch('')
   }
 
-  const getFakeData = () => {
-    return fakeData[Math.floor(Math.random() * fakeData.length)]
-  }
-
-  useEffect(()=>{
-      // getIpByLocation()
-      setIsLoading(false)
-    }, [])
 
   return (
     <div className="h-full md:w-9/12 m-auto mb-0 drop-shadow-md">
@@ -75,16 +51,13 @@ function App() {
         <DataCard data={data}/>
       </section>
       <div className="h-screen">
-          {isLoading ? <p>Loading...</p> : 
-          <>
-            <MapContainer scrollWheelZoom={false} zoom={13} center={[data.location.lat, data.location.lng]} className="h-full md:h-1/2 z-10 max-w-screen-xl">
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <Map position={[data.location.lat, data.location.lng]}/>
-            </MapContainer>
-          </>}
+        <MapContainer scrollWheelZoom={false} zoom={13} center={[data.location.lat, data.location.lng]} className="h-full md:h-1/2 z-10 max-w-screen-xl">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Map position={[data.location.lat, data.location.lng]}/>
+        </MapContainer>
       </div>
       <div className="attribution text-center">
         Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 

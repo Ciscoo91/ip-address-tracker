@@ -8,7 +8,7 @@ const mapIcon = L.icon({
 })
 
 
-export const Map = ({position}) => {
+export default function Map ({position}){
     const map = useMap();
 
     useEffect(()=>{
