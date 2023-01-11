@@ -28,9 +28,9 @@ Users should be able to:
 
 ### Screenshot
 
-![Mobile screen](./public/images/mobile.png)
+![Mobile screenshot of the application](./public/images/mobile.png)
 
-![Desktop screen](./public/images/desktop.png)
+![Desktop screenshot of the application](./public/images/desktop.png)
 
 Screenshots made with [Simulateur téléphone mobile - test site responsive](https://chrome.google.com/webstore/detail/mobile-simulator-responsi/ckejmhbmlajgoklhgbapkiccekfoccmk?hl=fr)
 
