@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {MapContainer, TileLayer } from "react-leaflet"
 import DataCard from './components/DataCard.jsx'
 import {Map} from './components/Map'
+import Modal from './components/Modal'
 import 'leaflet/dist/leaflet.css'
 import {isIPOrDomain} from './utils'
 import {fakeData} from './data'
@@ -12,6 +13,7 @@ function App() {
   const [data, setData] = useState(initialSate)
   const [isLoading, setIsLoading] = useState(true)
   const [inputToSearch, setInputToSearch] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   const getIpByLocation = async ()=>{
 
@@ -27,15 +29,23 @@ function App() {
   const getLocationByIpOrDomain = async (input) => {
     
     const response = await fetch(`https://geo.ipify.org/api/v2/country,city,vpn?apiKey=at_3VBBNCG6UauEtXDm7xvFw0sQhMmaC&${isIPOrDomain(input) ? 'ipAddress='+input : 'domain='+input}`)
-    const data = await response.json()
-    setData(data)
+
+    // console.log(response)
+
+    if(response.ok){
+      const data = await response.json()
+      setData(data)
+    }else if(response.status == 403){
+      console.log("An error occured")
+      setShowModal(true)
+    }
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    // getLocationByIpOrDomain(inputToSearch)
-    const output = getFakeData()
-    setData(output)
+    getLocationByIpOrDomain(inputToSearch)
+    // const output = getFakeData()
+    // setData(output)
 
     setInputToSearch('')
   }
@@ -52,8 +62,8 @@ function App() {
   return (
     <div className="h-full md:w-9/12 m-auto mb-0 drop-shadow-md">
       <section className="bg-[url('/images/pattern-bg.png')] bg-no-repeat h-64 md:h-56 border-1 flex flex-col justify-start items-center relative font-body">
-        <h1 className='my-3 md:my-9 text-white text-2xl'>IP Address Tracker</h1>
-        <form onSubmit={handleSubmit} className="flex flex-row justify-center align-center w-11/12 md:w-full">
+        <h1 className='my-3 md:my-6 text-white text-2xl'>IP Address Tracker</h1>
+        <form onSubmit={handleSubmit} className="my-2 flex flex-row justify-center align-center w-11/12 md:w-full">
           <input
             type="text" 
             placeholder="Search for any IP address or domain" 
@@ -80,6 +90,7 @@ function App() {
         Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
         Coded by <a href="#">Francisco Mambo</a>.
       </div>
+      <Modal showModal={showModal} setShowModal={setShowModal} />
     </div>
   )
 }
